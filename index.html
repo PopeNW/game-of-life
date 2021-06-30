@@ -5,9 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Game of Life</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <main>
+        <!-- Cell grid canvas -->
+        <canvas id="canvas"></canvas>
+        <!-- Game buttons panel -->
+        <section>
+            <button id="start-pause-btn">Start / Pause</button> <!-- Start / Pause toggle -->
+            <button id="next-iteration-btn">Next Iteration</button> <!-- Update game by one iteration -->
+            <button id="seed-btn">Seed</button> <!-- Seed the cell grid -->
+            <button id="reset-btn">Reset</button> <!-- Stops the game and resets the grid -->
+        </section>        
     </main>
+    <!-- Game of Life external JavaScript -->
+    <script src="game-of-life.js"></script>
 </body>
 </html>
