@@ -8,6 +8,9 @@ class GameOfLife {
     this.gridWidth = 700; // Grid width
     this.gridHeight = 700; // Grid height
     this.gridCell = 10; // Grid cell height and width
+    this.canvas = document.getElementById("canvas");
+    this.canvas.width = this.gridWidth; // Set grid canvas width
+    this.canvas.height = this.gridHeight; // Set grid canvas height
     this.rows = this.gridWidth / this.gridCell; // Calculates how many cells fit into the grid width
     this.cols = this.gridHeight / this.gridCell; // Calculates how many cells fit into the grid height
     this.grid = []; // Current life cycle grid
@@ -35,8 +38,8 @@ class GameOfLife {
   seedGrid() {
     let newGrid = this.grid.map((arr) => [...arr]); // Duplicate grid array
     // Randomise cell states and return updated grid
-    for (let row = 0; row < newGrid.length; row++) {
-      for (let col = 0; col < newGrid[row].length; col++) {
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
         newGrid[row][col] = Math.random() > 0.5 ? 1 : 0; // 50% chance for cell to be 1 (alvie) or 0 (dead)
       }
     }
@@ -48,8 +51,8 @@ class GameOfLife {
   updateLifeCycle() {
     let newGrid = this.grid.map((arr) => [...arr]); // Duplicate grid array
     // Loops through grid cells and count neighbours
-    for (let row = 0; row < this.grid.length; row++) {
-      for (let col = 0; col < this.grid[row].length; col++) {
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
         let neighbourCount = 0; // Tally of neighbouring cells
         // Loop through cell neighbours
         for (let i = -1; i <= 1; i++) {
@@ -97,7 +100,7 @@ class GameOfLife {
     this.render(); // Render grid canvas
   }
 
-  // Auto iterates the life cycle (Called by Start and Stop buttons)
+  // Auto iterates the life cycle (Called by Start / Stop button)
   toggleAutoLifeCycle() {
     if (this.loop === null) {
       this.loop = window.setInterval(() => {
@@ -109,13 +112,31 @@ class GameOfLife {
     }
   }
 
+  // On mouse click event the function identifies the selected cell and toggles its state
+  toggleClickedCell(ev) {
+    const rect = this.canvas.getBoundingClientRect(); // Gets canvas position in the browser viewport
+    const x = ev.clientX - rect.left; // X coordinate of mouse click on canvas
+    const y = ev.clientY - rect.top; // Y coordinate of mouse click on canvas
+    const selectedRow = Math.floor(x / this.gridCell); // Get selected row. Divides X by cell size and rounds the result.
+    const selectedColumn = Math.floor(y / this.gridCell); // Get selected column. Divides Y by cell size and rounds the result.
+    // console.log("X: " + x + " Y: " + y);
+    // console.log("Row: " + selectedRow + " Column: " + selectedColumn);
+
+    for (let row = 0; row < this.rows; row++) {
+      for (let col = 0; col < this.cols; col++) {
+        // Checks if the loops have reached the selected cell position
+        if (selectedRow === row && selectedColumn === col) {
+          // console.log(this.grid[row][col]); // Test selected cell state
+          this.grid[row][col] = 1 - this.grid[row][col]; // Toggle selected cell value
+          this.render(); // Call render to refresh canvas
+        }
+      }
+    }
+  }
+
   //   Renders the grid and cells on the HTML canvas (Called whenever there is a change to the grid)
   render() {
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = this.gridWidth; // Set grid canvas width
-    canvas.height = this.gridHeight; // Set grid canvas height
-
+    const ctx = this.canvas.getContext("2d");
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         ctx.beginPath();
@@ -143,24 +164,13 @@ window.onload = () => {
   const seedBtn = document.getElementById("seed-btn"); // Seed button
   const resetBtn = document.getElementById("reset-btn"); // Reset button
 
-  // window.setInterval(() => {
-  //   game.updateLifeCycle();
-  // }, 100);
-  // let loop = null;
-
-  // function toggleLoop() {
-  //   if (loop === null) {
-  //     loop = window.setInterval(() => {
-  //       game.updateLifeCycle();
-  //     }, 100);
-  //   } else {
-  //     clearInterval(loop);
-  //     loop = null;
-  //   }
-  // }
-
   // Event Listeners
-  // Start and Stop button event listener.
+  // Mouse click on canvas event listener. Toggles selected cell state when clicked.
+  canvas.addEventListener("mousedown", function (e) {
+    game.toggleClickedCell(e);
+  });
+
+  // Start and Stop button event listener
   startStopBtn.addEventListener(
     "click",
     function () {
@@ -169,7 +179,7 @@ window.onload = () => {
     false
   );
 
-  // Next Iteration button event listener. Calls the GameOfLife updateLifeCycle function on click.
+  // Next Iteration button event listener. Calls the GameOfLife updateLifeCycle function on click
   nextIterationBtn.addEventListener(
     "click",
     function () {
@@ -178,7 +188,7 @@ window.onload = () => {
     false
   );
 
-  // Seed grid button event listener. Calls the GameOfLife seedGrid function on click.
+  // Seed grid button event listener. Calls the GameOfLife seedGrid function on click
   seedBtn.addEventListener(
     "click",
     function () {
@@ -187,7 +197,7 @@ window.onload = () => {
     false
   );
 
-  // Reset button event listener. Calls the GameOfLife initialiseGrid function on click.
+  // Reset button event listener. Calls the GameOfLife initialiseGrid function on click
   resetBtn.addEventListener(
     "click",
     function () {
