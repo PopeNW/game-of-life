@@ -11,6 +11,7 @@ class GameOfLife {
     this.rows = this.gridWidth / this.gridCell; // Calculates how many cells fit into the grid width
     this.cols = this.gridHeight / this.gridCell; // Calculates how many cells fit into the grid height
     this.grid = []; // Current life cycle grid
+    this.loop = null;
     this.initialiseGrid(); // Fills grid array with rows, columns, and empty cells
   }
 
@@ -96,6 +97,18 @@ class GameOfLife {
     this.render(); // Render grid canvas
   }
 
+  // Auto iterates the life cycle (Called by Start and Stop buttons)
+  toggleAutoLifeCycle() {
+    if (this.loop === null) {
+      this.loop = window.setInterval(() => {
+        this.updateLifeCycle();
+      }, 100);
+    } else {
+      clearInterval(this.loop);
+      this.loop = null;
+    }
+  }
+
   //   Renders the grid and cells on the HTML canvas (Called whenever there is a change to the grid)
   render() {
     const canvas = document.getElementById("canvas");
@@ -133,13 +146,25 @@ window.onload = () => {
   // window.setInterval(() => {
   //   game.updateLifeCycle();
   // }, 100);
+  // let loop = null;
+
+  // function toggleLoop() {
+  //   if (loop === null) {
+  //     loop = window.setInterval(() => {
+  //       game.updateLifeCycle();
+  //     }, 100);
+  //   } else {
+  //     clearInterval(loop);
+  //     loop = null;
+  //   }
+  // }
 
   // Event Listeners
   // Start and Stop button event listener.
   startStopBtn.addEventListener(
     "click",
     function () {
-      game.updateLifeCycle();
+      game.toggleAutoLifeCycle();
     },
     false
   );
