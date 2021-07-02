@@ -1,8 +1,8 @@
 /* 
 The Game Of Life
-This file contains JavaScript code for the BBC technical test by Nathan Pope.
+This file contains JavaScript code for the BBC technical test.
+@author Nathan Pope
 */
-
 class GameOfLife {
   constructor() {
     this.gridWidth = 700; // Grid width
@@ -14,23 +14,23 @@ class GameOfLife {
     this.rows = this.gridWidth / this.gridCell; // Calculates how many cells fit into the grid width
     this.cols = this.gridHeight / this.gridCell; // Calculates how many cells fit into the grid height
     this.grid = []; // Current life cycle grid
-    this.loop = null;
+    this.loop = null; // Used for auto life cycle loop toggling
     this.initialiseGrid(); // Fills grid array with rows, columns, and empty cells
   }
 
-  // Initialises grid arrays with dead cells (Also used for Reset button call)
+  // Initialises grid arrays with dead cells (Used for initial grid set up and Reset button)
   initialiseGrid() {
-    let grid = [];
+    let newGrid = [];
     // Initialise rows and columns with dead cells
     for (let row = 0; row < this.rows; row++) {
       // Loop through grid rows
-      grid[row] = []; // Initialise column array to be iterated through
+      newGrid[row] = []; // Initialise column array to be iterated through
       for (let col = 0; col < this.cols; col++) {
         // Loop through grid columns
-        grid[row][col] = 0; // Sets initial cell state to 0 / dead
+        newGrid[row][col] = 0; // Sets initial cell state to 0 / dead
       }
     }
-    this.grid = grid;
+    this.grid = newGrid; // Overwrites grid with new initialised grid
     this.render(); // Render grid canvas
   }
 
@@ -100,33 +100,34 @@ class GameOfLife {
     this.render(); // Render grid canvas
   }
 
-  // Auto iterates the life cycle (Called by Start / Stop button)
+  // Toggles automatic life cycle iterations (Called by Start / Stop button)
   toggleAutoLifeCycle() {
+    // Starts the loop if it isn't running
     if (this.loop === null) {
+      // Iterates to the next life cycle every 100 milliseconds
       this.loop = window.setInterval(() => {
         this.updateLifeCycle();
       }, 100);
-    } else {
-      clearInterval(this.loop);
-      this.loop = null;
+    }
+    // Ends the loop if it is running
+    else {
+      clearInterval(this.loop); // Clears the looping interval
+      this.loop = null; // Resets loop to default
     }
   }
 
-  // On mouse click event the function identifies the selected cell and toggles its state
+  // On mouse click event, identifies which cell was selected and toggles its state.
   toggleClickedCell(ev) {
     const rect = this.canvas.getBoundingClientRect(); // Gets canvas position in the browser viewport
     const x = ev.clientX - rect.left; // X coordinate of mouse click on canvas
     const y = ev.clientY - rect.top; // Y coordinate of mouse click on canvas
     const selectedRow = Math.floor(x / this.gridCell); // Get selected row. Divides X by cell size and rounds the result.
     const selectedColumn = Math.floor(y / this.gridCell); // Get selected column. Divides Y by cell size and rounds the result.
-    // console.log("X: " + x + " Y: " + y);
-    // console.log("Row: " + selectedRow + " Column: " + selectedColumn);
 
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         // Checks if the loops have reached the selected cell position
         if (selectedRow === row && selectedColumn === col) {
-          // console.log(this.grid[row][col]); // Test selected cell state
           this.grid[row][col] = 1 - this.grid[row][col]; // Toggle selected cell value
           this.render(); // Call render to refresh canvas
         }
@@ -136,41 +137,40 @@ class GameOfLife {
 
   //   Renders the grid and cells on the HTML canvas (Called whenever there is a change to the grid)
   render() {
-    const ctx = this.canvas.getContext("2d");
+    const ctx = this.canvas.getContext("2d"); // Sets the canvas drawing context to 2d rendering
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
-        ctx.beginPath();
-        // Draw grid cells
+        ctx.beginPath(); // Begins a canvas drawing path
+        // Draws the selected grid cell
         ctx.rect(
           row * this.gridCell,
           col * this.gridCell,
           this.gridCell,
           this.gridCell
         );
-        // Set the cell colour dependent on cell state
-        ctx.fillStyle = this.grid[row][col] ? "green" : "white";
-        ctx.fill();
-        ctx.stroke();
+        ctx.fillStyle = this.grid[row][col] ? "green" : "white"; // Set the fill colour depending on cell state
+        ctx.fill(); // Fills the grid cell with colour
+        ctx.stroke(); // Draws a border around the grid cell
       }
     }
   }
 }
 
-// Runs when the web page has finished loading
+// Waits until the web page has finished loading
 window.onload = () => {
-  const game = new GameOfLife(); // Initialises a game of life
-  const startStopBtn = document.getElementById("start-stop-btn"); // Start and Stop button
+  const game = new GameOfLife(); // Initialises the game of life
+  const startStopBtn = document.getElementById("start-stop-btn"); // Start / Stop button
   const nextIterationBtn = document.getElementById("next-iteration-btn"); // Next Iteration button
   const seedBtn = document.getElementById("seed-btn"); // Seed button
   const resetBtn = document.getElementById("reset-btn"); // Reset button
 
   // Event Listeners
-  // Mouse click on canvas event listener. Toggles selected cell state when clicked.
+  // Mouse click on canvas event listener. Toggles a selected grid cell to alive or dead.
   canvas.addEventListener("mousedown", function (e) {
     game.toggleClickedCell(e);
   });
 
-  // Start and Stop button event listener
+  // Start and Stop button event listener. On click, toggles automatic life cycle updates.
   startStopBtn.addEventListener(
     "click",
     function () {
@@ -179,7 +179,7 @@ window.onload = () => {
     false
   );
 
-  // Next Iteration button event listener. Calls the GameOfLife updateLifeCycle function on click
+  // Next Iteration button event listener. On click, the life cycle updates to the next iteration once.
   nextIterationBtn.addEventListener(
     "click",
     function () {
@@ -188,7 +188,7 @@ window.onload = () => {
     false
   );
 
-  // Seed grid button event listener. Calls the GameOfLife seedGrid function on click
+  // Seed grid button event listener. On click, random cells are seeded into the grid.
   seedBtn.addEventListener(
     "click",
     function () {
@@ -197,7 +197,7 @@ window.onload = () => {
     false
   );
 
-  // Reset button event listener. Calls the GameOfLife initialiseGrid function on click
+  // Reset button event listener. On click, the grid is reset to all dead cells.
   resetBtn.addEventListener(
     "click",
     function () {
