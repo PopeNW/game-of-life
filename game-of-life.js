@@ -8,7 +8,7 @@ class GameOfLife {
     this.gridWidth = 700; // Grid width
     this.gridHeight = 700; // Grid height
     this.gridCell = 10; // Grid cell height and width
-    this.canvas = document.getElementById("canvas");
+    this.canvas = document.getElementById("canvas"); // HTML canvas reference
     this.canvas.width = this.gridWidth; // Set grid canvas width
     this.canvas.height = this.gridHeight; // Set grid canvas height
     this.rows = this.gridWidth / this.gridCell; // Calculates how many cells fit into the grid width
@@ -124,6 +124,7 @@ class GameOfLife {
     const selectedRow = Math.floor(x / this.gridCell); // Get selected row. Divides X by cell size and rounds the result.
     const selectedColumn = Math.floor(y / this.gridCell); // Get selected column. Divides Y by cell size and rounds the result.
 
+    // Loop through grid rows and columns to find selected cell
     for (let row = 0; row < this.rows; row++) {
       for (let col = 0; col < this.cols; col++) {
         // Checks if the loops have reached the selected cell position
