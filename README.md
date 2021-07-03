@@ -7,7 +7,7 @@ This project contains code for The Game Of Life as detailed in the Game of Life 
 ### Several assumptions were made about the problem including:
 
     1. Limited Grid size - An infinite 2D grid was not feasible so a limited grid size was implemented.
-    2. Grid seeding options - Randomised seeding and manual seeding were implemented to allow users to either quickly start the game with a random cell states or manually toggle cell states to customise their own grid patterns.
+    2. Grid seeding options - Randomised seeding and manual seeding were implemented to allow users to either quickly start the game with random cell states or manually toggle cell states to make their own grid patterns.
     3. Cell evolution - Users can choose to iterate life cycles one step at a time or run quick automatic iterations.
     4. Reset the grid - Users may want to restart the game. To facilitate this a reset button was added to quickly clear the grid of all live cells.
 
