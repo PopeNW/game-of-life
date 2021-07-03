@@ -1,6 +1,6 @@
 /* 
 The Game Of Life
-This file contains JavaScript code for the BBC technical test.
+This file contains JavaScript code for the BBC technical task.
 @author Nathan Pope
 */
 class GameOfLife {
