@@ -7,68 +7,73 @@ class GameOfLife {
   constructor() {
     this.gridWidth = 700; // Grid width
     this.gridHeight = 700; // Grid height
-    this.gridCell = 10; // Grid cell height and width
+    this.gridCellSize = 14; // Grid cell height and width
+
+    this.gridRows = this.gridWidth / this.gridCellSize; // Calculates how many cells fit into the grid width
+    this.gridCols = this.gridHeight / this.gridCellSize; // Calculates how many cells fit into the grid height
+
     this.canvas = document.getElementById("canvas"); // HTML canvas reference
     this.canvas.width = this.gridWidth; // Set grid canvas width
     this.canvas.height = this.gridHeight; // Set grid canvas height
-    this.rows = this.gridWidth / this.gridCell; // Calculates how many cells fit into the grid width
-    this.cols = this.gridHeight / this.gridCell; // Calculates how many cells fit into the grid height
+
     this.grid = []; // Current life cycle grid
     this.loop = null; // Used for auto life cycle loop toggling
+
     this.initialiseGrid(); // Fills grid array with rows, columns, and empty cells
   }
 
   // Initialises grid arrays with dead cells (Used for initial grid set up and Reset button)
   initialiseGrid() {
-    let newGrid = [];
+    let newGrid = []; // Used to store new grid layout during intialisation
+
     // Initialise rows and columns with dead cells
-    for (let row = 0; row < this.rows; row++) {
-      // Loop through grid rows
+    for (let row = 0; row < this.gridRows; row++) {
       newGrid[row] = []; // Initialise column array to be iterated through
-      for (let col = 0; col < this.cols; col++) {
-        // Loop through grid columns
+      for (let col = 0; col < this.gridCols; col++) {
         newGrid[row][col] = 0; // Sets initial cell state to 0 / dead
       }
     }
-    this.grid = newGrid; // Overwrites grid with new initialised grid
-    this.render(); // Render grid canvas
+
+    this.grid = newGrid; // Overwrites grid with the new initialised grid
+    this.render(); // Render grid canvas changes
   }
 
   // Seed grid with random cell states (Called by Seed button)
   seedGrid() {
     let newGrid = this.grid.map((arr) => [...arr]); // Duplicate grid array
+
     // Randomise cell states and return updated grid
-    for (let row = 0; row < this.rows; row++) {
-      for (let col = 0; col < this.cols; col++) {
+    for (let row = 0; row < this.gridRows; row++) {
+      for (let col = 0; col < this.gridCols; col++) {
         newGrid[row][col] = Math.random() > 0.5 ? 1 : 0; // 50% chance for cell to be 1 (alvie) or 0 (dead)
       }
     }
-    this.grid = newGrid; // Overwrites the existing grid with the newly seeded grid
-    this.render(); // Render grid canvas
+
+    this.grid = newGrid; // Overwrites the current grid with the new seeded grid
+    this.render(); // Render grid canvas changes
   }
 
-  // Determines cell states for the next life cycle by counting neighbours and applying rules
+  // Updates cell states for the next life cycle by counting neighbours and applying rules
   updateLifeCycle() {
     let newGrid = this.grid.map((arr) => [...arr]); // Duplicate grid array
-    // Loops through grid cells and count neighbours
-    for (let row = 0; row < this.rows; row++) {
-      for (let col = 0; col < this.cols; col++) {
+
+    // Counts neighbours
+    for (let row = 0; row < this.gridRows; row++) {
+      for (let col = 0; col < this.gridCols; col++) {
         let neighbourCount = 0; // Tally of neighbouring cells
-        // Loop through cell neighbours
+        // Loop through the current cells neighbours
         for (let i = -1; i <= 1; i++) {
-          // Cell neighbour row
           for (let j = -1; j <= 1; j++) {
-            // Cell neighbour column
             // Prevent selected cell counting itself as a neighbour
             if (i === 0 && j === 0) {
               continue;
             }
-            // Check that neighbouring cell position does not exceed grid boundries
+            // Check that neighbouring cell position being checked is not beyond grid boundries
             if (
               row + i >= 0 &&
               col + j >= 0 &&
-              row + i < this.rows &&
-              col + j < this.cols
+              row + i < this.gridRows &&
+              col + j < this.gridCols
             ) {
               neighbourCount += this.grid[row + i][col + j]; // Adds the value of neighbouring cell to neighbour count
             } else {
@@ -76,6 +81,7 @@ class GameOfLife {
             }
           }
         }
+
         // Apply rules and update cell state for the new grid
         let selectedCell = this.grid[row][col]; // Holds value of the selected cell state from current grid
         // If a live cell has fewer than 2 neighbours it dies
@@ -96,8 +102,9 @@ class GameOfLife {
         }
       }
     }
+
     this.grid = newGrid; // Overwrites the current life cycle grid with the new life cycle grid
-    this.render(); // Render grid canvas
+    this.render(); // Render grid canvas changes
   }
 
   // Toggles automatic life cycle iterations (Called by Start / Stop button)
@@ -112,21 +119,21 @@ class GameOfLife {
     // Ends the loop if it is running
     else {
       clearInterval(this.loop); // Clears the looping interval
-      this.loop = null; // Resets loop to default
+      this.loop = null; // Resets loop back to null
     }
   }
 
-  // On mouse click event, identifies which cell was selected and toggles its state.
+  // Toggles a grid cells state on mouse click
   toggleClickedCell(ev) {
     const rect = this.canvas.getBoundingClientRect(); // Gets canvas position in the browser viewport
     const x = ev.clientX - rect.left; // X coordinate of mouse click on canvas
     const y = ev.clientY - rect.top; // Y coordinate of mouse click on canvas
-    const selectedRow = Math.floor(x / this.gridCell); // Get selected row. Divides X by cell size and rounds the result.
-    const selectedColumn = Math.floor(y / this.gridCell); // Get selected column. Divides Y by cell size and rounds the result.
+    const selectedRow = Math.floor(x / this.gridCellSize); // Get selected row. Divides X by cell size and rounds the result.
+    const selectedColumn = Math.floor(y / this.gridCellSize); // Get selected column. Divides Y by cell size and rounds the result.
 
     // Loop through grid rows and columns to find selected cell
-    for (let row = 0; row < this.rows; row++) {
-      for (let col = 0; col < this.cols; col++) {
+    for (let row = 0; row < this.gridRows; row++) {
+      for (let col = 0; col < this.gridCols; col++) {
         // Checks if the loops have reached the selected cell position
         if (selectedRow === row && selectedColumn === col) {
           this.grid[row][col] = 1 - this.grid[row][col]; // Toggle selected cell value
@@ -136,22 +143,23 @@ class GameOfLife {
     }
   }
 
-  //   Renders the grid and cells on the HTML canvas (Called whenever there is a change to the grid)
+  // Renders grid and cells on the HTML canvas (Called whenever there is a change to the grid)
   render() {
     const ctx = this.canvas.getContext("2d"); // Sets the canvas drawing context to 2d rendering
-    for (let row = 0; row < this.rows; row++) {
-      for (let col = 0; col < this.cols; col++) {
-        ctx.beginPath(); // Begins a canvas drawing path
-        // Draws the selected grid cell
+    for (let row = 0; row < this.gridRows; row++) {
+      for (let col = 0; col < this.gridCols; col++) {
+        ctx.beginPath(); // Begin drawing path
+        // Draws the current grid cell
         ctx.rect(
-          row * this.gridCell,
-          col * this.gridCell,
-          this.gridCell,
-          this.gridCell
+          row * this.gridCellSize,
+          col * this.gridCellSize,
+          this.gridCellSize,
+          this.gridCellSize
         );
-        ctx.fillStyle = this.grid[row][col] ? "green" : "white"; // Set the fill colour depending on cell state
+        ctx.fillStyle = this.grid[row][col] ? "#8bac0f" : "#ffffff"; // Live cells are light green and dead cells are white
         ctx.fill(); // Fills the grid cell with colour
         ctx.stroke(); // Draws a border around the grid cell
+        ctx.closePath(); // End drawing path
       }
     }
   }
