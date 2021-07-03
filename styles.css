@@ -2,3 +2,48 @@ main {
   padding: 1em;
   text-align: center;
 }
+
+h1 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: #555555;
+}
+
+/* Game of Life buttons container */
+#game-buttons-container {
+  margin-top: 1em;
+}
+
+button {
+  font-family: sans-serif;
+  border: none; /* Remove default border */
+  padding: 0.4em 1.2em; /* Pads button width and height */
+  text-decoration: none; /* Clears default text decoration */
+  border-radius: 0.2em; /* Curved border edges */
+  color: #fff; /* White text */
+  cursor: pointer; /* Mouse hover pointer on buttons */
+}
+
+/* Start button */
+.start-btn {
+  background-color: #038c33; /* Green background */
+}
+
+/* Stop button */
+.stop-btn {
+  background-color: #bf391b; /* Red background */
+}
+
+/* Next Iteration button */
+#next-iteration-btn {
+  background-color: #5ea4bf; /* Blue background */
+}
+
+/* Seed button */
+#seed-btn {
+  background-color: #363973; /* Purple background */
+}
+
+/* Reset button */
+#reset-btn {
+  background-color: #555555; /* Black background */
+}

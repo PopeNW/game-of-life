@@ -9,14 +9,16 @@
 </head>
 <body>
     <main>
-        <!-- Cell grid canvas -->
+        <!-- Title -->
+        <h1>The Game of Life</h1>
+        <!-- Grid canvas -->
         <canvas id="canvas"></canvas>
         <!-- Game buttons panel -->
-        <section>
-            <button id="start-stop-btn">Start / Stop</button> <!-- Start / Pause toggle -->
-            <button id="next-iteration-btn">Next Iteration</button> <!-- Update game by one iteration -->
-            <button id="seed-btn">Seed</button> <!-- Seed the cell grid -->
-            <button id="reset-btn">Reset</button> <!-- Stops the game and resets the grid -->
+        <section id="game-buttons-container">
+            <button id="start-stop-btn" class="start-btn">Start</button> <!-- Start / Stop auto life cycle toggle -->
+            <button id="next-iteration-btn">Next Iteration</button> <!-- Update life cycle by one iteration -->
+            <button id="seed-btn">Random Seed</button> <!-- Seed the grid with random cells -->
+            <button id="reset-btn">Reset</button> <!-- Resets grid cells to dead -->
         </section>        
     </main>
     <!-- Game of Life external JavaScript -->

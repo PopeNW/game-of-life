@@ -158,6 +158,7 @@ class GameOfLife {
         );
         ctx.fillStyle = this.grid[row][col] ? "#8bac0f" : "#ffffff"; // Live cells are light green and dead cells are white
         ctx.fill(); // Fills the grid cell with colour
+        ctx.strokeStyle = "#555555";
         ctx.stroke(); // Draws a border around the grid cell
         ctx.closePath(); // End drawing path
       }
@@ -179,11 +180,19 @@ window.onload = () => {
     game.toggleClickedCell(e);
   });
 
-  // Start and Stop button event listener. On click, toggles automatic life cycle updates.
+  // Start and Stop button event listener. On click, toggles automatic life cycle updates and changes button text.
   startStopBtn.addEventListener(
     "click",
     function () {
       game.toggleAutoLifeCycle();
+      // Toggles button text between start and stop
+      if (startStopBtn.innerHTML == "Start") {
+        startStopBtn.innerHTML = "Stop"; // Button text changed to Stop
+        startStopBtn.className = "stop-btn";
+      } else {
+        startStopBtn.innerHTML = "Start"; // Button text changed to Start
+        startStopBtn.className = "start-btn";
+      }
     },
     false
   );
